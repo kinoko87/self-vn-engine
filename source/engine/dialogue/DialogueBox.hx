@@ -49,10 +49,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		add(nameText);
 		add(dialogueText);
 
-		dialogueText.completeCallback = function()
-		{
-			isTalking = false;
-		}
+		dialogueText.completeCallback = completeCallback;
 
 		currentData = data[index];
 
@@ -66,7 +63,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	public override function update(elapsed:Float)
 	{
-		super.update(elapsed);
 		if (!isActive)
 			return;
 
@@ -77,14 +73,17 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		if (isSelectingChoice)
 		{
+			// trace('shit');
 			if (FlxG.keys.justPressed.UP)
 			{
+				trace('yea');
 				choiceIndex--;
 				if (choiceIndex < 0)
 					choiceIndex = choices.length - 1;
 			}
 			else if (FlxG.keys.justPressed.DOWN)
 			{
+				trace('no');
 				choiceIndex++;
 				if (choiceIndex > choices.length - 1)
 					choiceIndex = 0;
@@ -107,8 +106,26 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (index > data.length - 1)
 			isDone = true;
 
+		if (FlxG.keys.pressed.SHIFT)
+		{
+			var speed = 1 / 120;
+			if (currentData[1].speed < speed)
+			{
+				speed = currentData[1].speed / 3;
+			}
+			dialogueText.delay = speed;
+		}
+		else
+		{
+			if (isTalking)
+				dialogueText.delay = currentData[1].speed;
+		}
+
+		super.update(elapsed);
+
 		if (!isDone && !isTalking && !isSelectingChoice && FlxG.keys.justPressed.ENTER)
 		{
+			trace("ASGARD");
 			index++;
 			currentData = data[index];
 
@@ -125,13 +142,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			{
 				initChoices();
 			}
-		}
-
-		if (!isTalking && currentData[0] != "choices" && next != null && next[0] == "choices")
-		{
-			index++;
-			currentData = data[index];
-			initChoices();
 		}
 	}
 
@@ -179,13 +189,15 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					else if (currentData[0] == "end")
 						isDone = true;
 
-					for (c in choiceSprites)
+					while (choiceSprites.length > 0)
 					{
-						remove(c);
-						c.destroy();
+						remove(choiceSprites[0]);
+						choiceSprites[0].destroy();
+						choiceSprites.remove(choiceSprites[0]);
 					}
 
 					isSelectingChoice = false;
+					choiceIndex = 0;
 					return;
 				}
 			}
@@ -207,6 +219,22 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 
 		isSelectingChoice = false;
+	}
+
+	function completeCallback()
+	{
+		isTalking = false;
+		var next = data[index + 1];
+
+		trace("WHAT IS THE NEXT SHIT: ", next);
+
+		if (next != null && next[0] == "choices")
+		{
+			trace("DERUDERUDERUDERUDERU");
+			index++;
+			currentData = data[index];
+			initChoices();
+		}
 	}
 }
 

@@ -6,6 +6,13 @@
     </Choices>
     <Talk name="mari">Hello there!</Talk>
     <End/>
-    <Talk name="mari" id="goodbye">Goodbye!</Talk>
+    <Talk name="mari" id="goodbye">Wait...why?!</Talk>
+    <Choices>
+        <Choice >I'm joking</Choice>
+        <Choice goto="hate">Because I hate you</Choice>
+    </Choices>
+    <Talk name="mari">Oh! Haha...</Talk>
+    <End/>
+    <Talk name="mari" id="hate">Oh...</Talk>
     <End/>
 </Dialogue>
