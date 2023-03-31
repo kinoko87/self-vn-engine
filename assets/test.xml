@@ -1,0 +1,11 @@
+<Dialogue>
+    <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
+    <Choices>
+        <Choice>Hi!</Choice>
+        <Choice goto="goodbye">Bye!</Choice>
+    </Choices>
+    <Talk name="mari">Hello there!</Talk>
+    <End/>
+    <Talk name="mari" id="goodbye">Goodbye!</Talk>
+    <End/>
+</Dialogue>
