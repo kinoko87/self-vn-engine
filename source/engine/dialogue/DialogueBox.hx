@@ -10,6 +10,7 @@ import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.app.Application;
+import openfl.utils.Assets;
 
 // TODO: Polishing and possible optimizations
 class DialogueBox extends FlxSpriteGroup implements IDialogueBox
@@ -36,6 +37,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	public var isDone:Bool = false;
 
+	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "num" => 12];
+
 	public function new(?x:Float = 0, ?y:Float = 0, data:Array<Array<Dynamic>>)
 	{
 		super(x, y);
@@ -53,11 +56,54 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		currentData = data[index];
 
-		trace(currentData);
 		if (currentData[0] == "talk")
 		{
-			trace(currentData);
 			talk();
+		}
+		else if (currentData[0] == "choices")
+		{
+			initChoices();
+		}
+		else if (currentData[0] == "if")
+		{
+			var isTrue = false;
+
+			if (currentData[1].check == "lt" || currentData[1].check == "<")
+			{
+				isTrue = ifMap[currentData[1].value] < Std.parseFloat(currentData[1].is_);
+			}
+			else if (currentData[1].check == "lte" || currentData[1].check == "<=")
+			{
+				isTrue = ifMap[currentData[1].value] <= Std.parseFloat(currentData[1].is_);
+			}
+			else if (currentData[1].check == "gt" || currentData[1].check == ">")
+			{
+				isTrue = ifMap[currentData[1].value] > Std.parseFloat(currentData[1].is_);
+			}
+			else if (currentData[1].check == "gte" || currentData[1].check == ">=")
+			{
+				isTrue = ifMap[currentData[1].value] >= Std.parseFloat(currentData[1].is_);
+			}
+			else if (currentData[1].check == "not" || currentData[1].check == "!")
+			{
+				isTrue = Std.string(ifMap[currentData[1].value]) != currentData[1].is_;
+			}
+			else
+			{
+				isTrue = Std.string(ifMap[currentData[1].value]) == currentData[1].is_;
+			}
+
+			if (isTrue)
+			{
+				index = getIndexFromID(currentData[1].goto);
+				currentData = data[index];
+				if (currentData[0] == "talk")
+					talk();
+				else if (currentData[0] == "choices")
+					initChoices();
+				else if (currentData[0] == "end")
+					isDone = true;
+			}
 		}
 	}
 
@@ -73,17 +119,14 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		if (isSelectingChoice)
 		{
-			// trace('shit');
 			if (FlxG.keys.justPressed.UP)
 			{
-				trace('yea');
 				choiceIndex--;
 				if (choiceIndex < 0)
 					choiceIndex = choices.length - 1;
 			}
 			else if (FlxG.keys.justPressed.DOWN)
 			{
-				trace('no');
 				choiceIndex++;
 				if (choiceIndex > choices.length - 1)
 					choiceIndex = 0;
@@ -103,10 +146,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			}
 		}
 
-		if (index > data.length - 1)
-			isDone = true;
-
-		if (FlxG.keys.pressed.SHIFT)
+		if (FlxG.keys.pressed.SHIFT && !isDone && currentData[0] == "talk")
 		{
 			var speed = 1 / 120;
 			if (currentData[1].speed < speed)
@@ -123,9 +163,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		super.update(elapsed);
 
-		if (!isDone && !isTalking && !isSelectingChoice && FlxG.keys.justPressed.ENTER)
+		if (index < data.length - 1 && !isDone && !isTalking && !isSelectingChoice && FlxG.keys.justPressed.ENTER)
 		{
-			trace("ASGARD");
 			index++;
 			currentData = data[index];
 
@@ -142,12 +181,73 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			{
 				initChoices();
 			}
+			else if (currentData[0] == "if")
+			{
+				var isTrue = false;
+
+				if (currentData[1].check == "lt" || currentData[1].check == "<")
+				{
+					isTrue = ifMap[currentData[1].value] < Std.parseFloat(currentData[1].is_);
+				}
+				else if (currentData[1].check == "lte" || currentData[1].check == "<=")
+				{
+					isTrue = ifMap[currentData[1].value] <= Std.parseFloat(currentData[1].is_);
+				}
+				else if (currentData[1].check == "gt" || currentData[1].check == ">")
+				{
+					isTrue = ifMap[currentData[1].value] > Std.parseFloat(currentData[1].is_);
+				}
+				else if (currentData[1].check == "gte" || currentData[1].check == ">=")
+				{
+					isTrue = ifMap[currentData[1].value] >= Std.parseFloat(currentData[1].is_);
+				}
+				else if (currentData[1].check == "not" || currentData[1].check == "!")
+				{
+					isTrue = Std.string(ifMap[currentData[1].value]) != currentData[1].is_;
+				}
+				else
+				{
+					isTrue = Std.string(ifMap[currentData[1].value]) == currentData[1].is_;
+				}
+
+				if (isTrue)
+				{
+					index = getIndexFromID(currentData[1].goto);
+					currentData = data[index];
+					if (currentData[0] == "talk")
+						talk();
+					else if (currentData[0] == "choices")
+						initChoices();
+					else if (currentData[0] == "end")
+						isDone = true;
+					else if (currentData[0] == "gotofile")
+						gotoFile();
+				}
+			}
+			else if (currentData[0] == "gotofile")
+			{
+				gotoFile();
+			}
 		}
+	}
+
+	function gotoFile()
+	{
+		index = 0;
+		var file = currentData[1].file;
+		trace("DA FILE is ", file);
+		this.data = DialogueParser.parse(Assets.getText(file));
+		currentData = data[index];
+		if (currentData[0] == "talk")
+			talk();
+		else if (currentData[0] == "choices")
+			initChoices();
+		else if (currentData[0] == "end")
+			isDone = true;
 	}
 
 	function talk()
 	{
-		trace("is talk");
 		isTalking = true;
 		nameText.text = currentData[1].name;
 		dialogueText.size = currentData[1].size;
@@ -159,7 +259,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	{
 		isSelectingChoice = true;
 		choices = currentData[1];
-		trace(choices);
 		for (i in 0...choices.length)
 		{
 			var c = choices[i];
@@ -172,14 +271,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	function doChoice()
 	{
 		var cc = choices[choiceIndex];
-		trace("FUCK");
 		if (cc.goto != null)
 		{
 			for (i in data)
 			{
-				if (i[1] != null && i[1].id != null && i[1].id == cc.goto)
+				if (i[1] != null && i[1].id != null && i[1].id != null && i[1].id == cc.goto)
 				{
-					trace("SHIT");
 					index = data.indexOf(i);
 					currentData = data[index];
 					if (currentData[0] == "talk")
@@ -188,6 +285,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 						initChoices();
 					else if (currentData[0] == "end")
 						isDone = true;
+					else if (currentData[0] == "gotofile")
+						gotoFile();
 
 					while (choiceSprites.length > 0)
 					{
@@ -211,6 +310,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			initChoices();
 		else if (currentData[0] == "end")
 			isDone = true;
+		else if (currentData[0] == "gotofile")
+			gotoFile();
 
 		for (c in choiceSprites)
 		{
@@ -226,15 +327,25 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		isTalking = false;
 		var next = data[index + 1];
 
-		trace("WHAT IS THE NEXT SHIT: ", next);
-
 		if (next != null && next[0] == "choices")
 		{
-			trace("DERUDERUDERUDERUDERU");
 			index++;
 			currentData = data[index];
 			initChoices();
 		}
+	}
+
+	function getIndexFromID(id:String)
+	{
+		for (i in data)
+		{
+			if (i[0] != "choices" && i[0] != "if" && i[0] != "end" && i[1].id == id)
+			{
+				return data.indexOf(i);
+			}
+		}
+
+		return -1;
 	}
 }
 

@@ -12,6 +12,20 @@ typedef TalkAction =
 	var size:Int;
 }
 
+typedef GotoFileAction =
+{
+	var id:String;
+	var file:String;
+}
+
+typedef IfAction =
+{
+	var value:String;
+	var is_:String;
+	var goto:String;
+	var check:String;
+}
+
 typedef ChoicesAction = Array<ChoiceData>;
 
 typedef ChoiceData =
@@ -65,9 +79,33 @@ class DialogueParser
 
 				actions.push(["choices", choices]);
 			}
+			else if (element.name == "If")
+			{
+				var value = element.has.value ? element.att.value : null;
+				var is_ = element.has.resolve("is") ? element.att.resolve("is") : null;
+				var goto = element.has.goto ? element.att.goto : null;
+				var check = element.has.check ? element.att.check : null;
+
+				actions.push([
+					"if",
+					{
+						value: value,
+						is_: is_,
+						goto: goto,
+						check: check.toLowerCase()
+					}
+				]);
+			}
 			else if (element.name == "End")
 			{
 				actions.push(["end", null]);
+			}
+			else if (element.name == "GotoFile")
+			{
+				var file = element.has.file ? element.att.file : null;
+				var id = element.has.id ? element.att.id : null;
+
+				actions.push(["gotofile", {file: file, id: id}]);
 			}
 		}
 

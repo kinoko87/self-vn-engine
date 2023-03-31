@@ -14,5 +14,6 @@
     <Talk name="mari">Oh! Haha...</Talk>
     <End/>
     <Talk name="mari" id="hate">Oh...</Talk>
+    <GotoFile file="assets/ok.xml"/>
     <End/>
 </Dialogue>
