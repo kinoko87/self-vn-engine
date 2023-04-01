@@ -56,63 +56,13 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		currentData = data[index];
 
-		if (currentData[0] == "talk")
-		{
-			talk();
-		}
-		else if (currentData[0] == "choices")
-		{
-			initChoices();
-		}
-		else if (currentData[0] == "if")
-		{
-			var isTrue = false;
-
-			if (currentData[1].check == "lt" || currentData[1].check == "<")
-			{
-				isTrue = ifMap[currentData[1].value] < Std.parseFloat(currentData[1].is_);
-			}
-			else if (currentData[1].check == "lte" || currentData[1].check == "<=")
-			{
-				isTrue = ifMap[currentData[1].value] <= Std.parseFloat(currentData[1].is_);
-			}
-			else if (currentData[1].check == "gt" || currentData[1].check == ">")
-			{
-				isTrue = ifMap[currentData[1].value] > Std.parseFloat(currentData[1].is_);
-			}
-			else if (currentData[1].check == "gte" || currentData[1].check == ">=")
-			{
-				isTrue = ifMap[currentData[1].value] >= Std.parseFloat(currentData[1].is_);
-			}
-			else if (currentData[1].check == "not" || currentData[1].check == "!")
-			{
-				isTrue = Std.string(ifMap[currentData[1].value]) != currentData[1].is_;
-			}
-			else
-			{
-				isTrue = Std.string(ifMap[currentData[1].value]) == currentData[1].is_;
-			}
-
-			if (isTrue)
-			{
-				index = getIndexFromID(currentData[1].goto);
-				currentData = data[index];
-				if (currentData[0] == "talk")
-					talk();
-				else if (currentData[0] == "choices")
-					initChoices();
-				else if (currentData[0] == "end")
-					isDone = true;
-			}
-		}
+		doActions();
 	}
 
 	public override function update(elapsed:Float)
 	{
 		if (!isActive)
 			return;
-
-		var next = data[index + 1];
 
 		if (FlxG.keys.justPressed.R)
 			FlxG.resetState();
@@ -168,67 +118,59 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			index++;
 			currentData = data[index];
 
-			if (currentData[0] == "end")
-			{
-				isDone = true;
-				return;
-			}
-			else if (currentData[0] == "talk")
-			{
-				talk();
-			}
-			else if (currentData[0] == "choices")
-			{
-				initChoices();
-			}
-			else if (currentData[0] == "if")
-			{
-				var isTrue = false;
-
-				if (currentData[1].check == "lt" || currentData[1].check == "<")
-				{
-					isTrue = ifMap[currentData[1].value] < Std.parseFloat(currentData[1].is_);
-				}
-				else if (currentData[1].check == "lte" || currentData[1].check == "<=")
-				{
-					isTrue = ifMap[currentData[1].value] <= Std.parseFloat(currentData[1].is_);
-				}
-				else if (currentData[1].check == "gt" || currentData[1].check == ">")
-				{
-					isTrue = ifMap[currentData[1].value] > Std.parseFloat(currentData[1].is_);
-				}
-				else if (currentData[1].check == "gte" || currentData[1].check == ">=")
-				{
-					isTrue = ifMap[currentData[1].value] >= Std.parseFloat(currentData[1].is_);
-				}
-				else if (currentData[1].check == "not" || currentData[1].check == "!")
-				{
-					isTrue = Std.string(ifMap[currentData[1].value]) != currentData[1].is_;
-				}
-				else
-				{
-					isTrue = Std.string(ifMap[currentData[1].value]) == currentData[1].is_;
-				}
-
-				if (isTrue)
-				{
-					index = getIndexFromID(currentData[1].goto);
-					currentData = data[index];
-					if (currentData[0] == "talk")
-						talk();
-					else if (currentData[0] == "choices")
-						initChoices();
-					else if (currentData[0] == "end")
-						isDone = true;
-					else if (currentData[0] == "gotofile")
-						gotoFile();
-				}
-			}
-			else if (currentData[0] == "gotofile")
-			{
-				gotoFile();
-			}
+			doActions();
 		}
+	}
+
+	function ifCheck()
+	{
+		var isTrue = false;
+
+		if (currentData[1].check == "lt" || currentData[1].check == "<")
+		{
+			isTrue = ifMap[currentData[1].value] < Std.parseFloat(currentData[1].is_);
+		}
+		else if (currentData[1].check == "lte" || currentData[1].check == "<=")
+		{
+			isTrue = ifMap[currentData[1].value] <= Std.parseFloat(currentData[1].is_);
+		}
+		else if (currentData[1].check == "gt" || currentData[1].check == ">")
+		{
+			isTrue = ifMap[currentData[1].value] > Std.parseFloat(currentData[1].is_);
+		}
+		else if (currentData[1].check == "gte" || currentData[1].check == ">=")
+		{
+			isTrue = ifMap[currentData[1].value] >= Std.parseFloat(currentData[1].is_);
+		}
+		else if (currentData[1].check == "not" || currentData[1].check == "!")
+		{
+			isTrue = Std.string(ifMap[currentData[1].value]) != currentData[1].is_;
+		}
+		else
+		{
+			isTrue = Std.string(ifMap[currentData[1].value]) == currentData[1].is_;
+		}
+
+		if (isTrue)
+		{
+			index = getIndexFromID(currentData[1].goto);
+			currentData = data[index];
+			doActions();
+		}
+	}
+
+	function doActions()
+	{
+		if (currentData[0] == "talk")
+			talk();
+		else if (currentData[0] == "choices")
+			initChoices();
+		else if (currentData[0] == "if")
+			ifCheck();
+		else if (currentData[0] == "gotofile")
+			gotoFile();
+		else if (currentData[0] == "end")
+			isDone = true;
 	}
 
 	function gotoFile()
@@ -238,12 +180,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		trace("DA FILE is ", file);
 		this.data = DialogueParser.parse(Assets.getText(file));
 		currentData = data[index];
-		if (currentData[0] == "talk")
-			talk();
-		else if (currentData[0] == "choices")
-			initChoices();
-		else if (currentData[0] == "end")
-			isDone = true;
+		doActions();
 	}
 
 	function talk()
@@ -279,14 +216,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 				{
 					index = data.indexOf(i);
 					currentData = data[index];
-					if (currentData[0] == "talk")
-						talk();
-					else if (currentData[0] == "choices")
-						initChoices();
-					else if (currentData[0] == "end")
-						isDone = true;
-					else if (currentData[0] == "gotofile")
-						gotoFile();
+					doActions();
 
 					while (choiceSprites.length > 0)
 					{
@@ -304,14 +234,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		index++;
 		currentData = data[index];
-		if (currentData[0] == "talk")
-			talk();
-		else if (currentData[0] == "choices")
-			initChoices();
-		else if (currentData[0] == "end")
-			isDone = true;
-		else if (currentData[0] == "gotofile")
-			gotoFile();
+		doActions();
 
 		for (c in choiceSprites)
 		{
