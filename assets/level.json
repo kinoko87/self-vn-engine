@@ -1,0 +1,21 @@
+{
+    "initialBackground": {
+        "image": "none",
+        "x": 0,
+        "y": 0
+    },
+    "initialBGM": "none",
+    "initialDialogue": "assets/test.xml",
+    "transIn": {
+        "type": "fade",
+        "duration": 0.3,
+        "color": "black"
+    },
+    "transOut":
+    {
+        "type": "fade",
+        "duration": 0.3,
+        "color": "black"
+    }
+}
+

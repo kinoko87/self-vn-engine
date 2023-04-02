@@ -48,6 +48,8 @@ class DialogueParser
 		{
 			var element = new Access(e);
 
+			// Why the fuck did I not use a switch statement
+
 			if (element.name == "Talk")
 			{
 				var name:String = element.has.name ? element.att.name : "";
@@ -106,6 +108,25 @@ class DialogueParser
 				var id = element.has.id ? element.att.id : null;
 
 				actions.push(["gotofile", {file: file, id: id}]);
+			} else if (element.name == "ChangeBGM") {
+				var file = element.has.file ? element.att.file : null;
+				var id = element.has.id ? element.att.id : null;
+
+				actions.push(["changebgm", {file: file, id: id}]);
+			} else if (element.name == "ChangeBG") {
+				var file = element.has.file ? element.att.file : null;
+				var id = element.has.id ? element.att.id : null;
+				var x = element.has.x ? Std.parseFloat(element.att.x) : 0;
+				var y = element.has.y ? Std.parseFloat(element.att.y) : 0;
+
+				actions.push(["changebg", {file: file, x: x, y: y, id: id}]);
+			} else if (element.name == "Show") {
+				var sprite = element.has.sprite ? element.att.sprite : null;
+				var x = element.has.x ? Std.parseFloat(element.att.x) : 0;
+				var y = element.has.y ? Std.parseFloat(element.att.y) : 0;
+				var id = element.has.id ? element.att.id : null;
+
+				actions.push(["show", {sprite: sprite, x: x, y: y, id: id}]);
 			}
 		}
 

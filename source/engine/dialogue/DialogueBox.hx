@@ -1,5 +1,6 @@
 package engine.dialogue;
 
+import flixel.math.FlxRect;
 import engine.dialogue.DialogueParser.ChoicesAction;
 import engine.dialogue.DialogueParser.TalkAction;
 import engine.dialogue.interfaces.IDialogueBox;
@@ -29,6 +30,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	public var index:Int = 0;
 	public var choiceIndex:Int = 0;
 
+	public var scene:Scene;
+
 	public var isActive:Bool = true;
 
 	public var isTalking:Bool = false;
@@ -36,13 +39,17 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	public var isSelectingChoice:Bool = false;
 
 	public var isDone:Bool = false;
-
+	
 	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "num" => 12];
 
-	public function new(?x:Float = 0, ?y:Float = 0, data:Array<Array<Dynamic>>)
+	//							 id      sprite
+	public var activeSprites:Map<String, FlxSprite> = [];
+
+	public function new(?x:Float = 0, ?y:Float = 0, data:Array<Array<Dynamic>>, scene:Scene)
 	{
 		super(x, y);
 		this.data = data;
+		this.scene = scene;
 
 		box = new FlxSprite(0, 0).makeGraphic(660, Std.int(640 / 4), FlxColor.GRAY);
 		nameText = new FlxText(box.x, box.y - 38, 0, "", 30);
@@ -64,8 +71,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (!isActive)
 			return;
 
-		if (FlxG.keys.justPressed.R)
-			FlxG.resetState();
 
 		if (isSelectingChoice)
 		{
@@ -112,6 +117,14 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 
 		super.update(elapsed);
+
+		while (currentData[0] == "changebgm" || currentData[0] == "changebg" || currentData[0] == "show" || currentData[0] == "hide") {
+			index++;
+			currentData = data[index];
+			trace("HEYHEY", currentData[1]);
+			doActions();
+
+		}
 
 		if (index < data.length - 1 && !isDone && !isTalking && !isSelectingChoice && FlxG.keys.justPressed.ENTER)
 		{
@@ -169,6 +182,28 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			ifCheck();
 		else if (currentData[0] == "gotofile")
 			gotoFile();
+		else if (currentData[0] == "changebgm")
+			FlxG.sound.playMusic(currentData[1].file);
+		else if (currentData[0] == "changebg") {
+			trace(currentData[1]);
+			scene.background.loadGraphic(currentData[1].file);
+			scene.background.x = currentData[1].x;
+			scene.background.y = currentData[1].y;
+		} else if (currentData[0] == "show") {
+			if (scene.spritePresets.exists(currentData[1].sprite)) {
+				var stuff = scene.spritePresets.get(currentData[1].sprite);
+				var sprite = new FlxSprite(currentData[1].x, currentData[1].y).loadGraphic(stuff.img);
+				sprite.clipRect = stuff.clipRect;
+				scene.foregroundSprites.add(sprite);
+				if (currentData[1].id != null)
+					activeSprites.set(currentData[1].id, sprite);
+			} else {
+				var sprite = new FlxSprite(currentData[1].x, currentData[1].y).loadGraphic(currentData[1].sprite);
+				scene.foregroundSprites.add(sprite);
+				if (currentData[1].id != null)
+					activeSprites.set(currentData[1].id, sprite);
+			}
+		}
 		else if (currentData[0] == "end")
 			isDone = true;
 	}
@@ -182,6 +217,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		currentData = data[index];
 		doActions();
 	}
+
 
 	function talk()
 	{
