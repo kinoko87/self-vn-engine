@@ -4,7 +4,13 @@
         "x": 0,
         "y": 0
     },
-    "initialBGM": "none",
+    "initialBGM": {
+        "song": "none",
+        "volume": 1,
+        "fadeInDuration": 0,
+        "fadeOutDuration": 0.3,
+        "oneshot": false
+    },
     "initialDialogue": "assets/test.xml",
     "transIn": {
         "type": "fade",

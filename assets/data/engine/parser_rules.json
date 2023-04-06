@@ -1,0 +1,241 @@
+[
+    {
+        "name": "Talk",
+        "rule": [
+            {
+                "attribute": "name",
+                "as": "string"
+            },
+            {
+                "attribute": "text",
+                "as": "string",
+                "from": "innerData"
+            },
+            {
+                "attribute": "speed",
+                "as": "float",
+                "defaultValue": 0.05
+            },
+            {
+                "attribute": "size",
+                "as": "int",
+                "defaultValue": 16
+            },
+            {
+                "attribute": "skip",
+                "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "If",
+        "rule": [
+            {
+                "attribute": "value",
+                "as": "string"
+            },
+            {
+                "attribute": "is",
+                "as": "string"
+            },
+            {
+                "attribute": "check",
+                "as": "string"
+            },
+            {
+                "attribute": "goto",
+                "as": "string"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "End",
+        "rule": [
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "GotoFile",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "id"
+            }
+        ]   
+    },
+    {
+        "name": "ChangeBGM",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "volume",
+                "as": "float"
+            },
+            {
+                "attribute": "initialVolume",
+                "as": "float"
+            },
+            {
+                "attribute": "oneshot",
+                "as": "bool"
+            },
+            {
+                "attribute": "fadeInDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "fadeOutDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "StopBGM",
+        "rule": [
+            {
+                "attribute": "fadeOutDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "ChangeBG",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "x",
+                "as": "float"
+            },
+            {
+                "attribute": "y",
+                "as": "float"
+            },
+            {
+                "attribute": "effect",
+                "as": "string"
+            },
+            {
+                "attribute": "effectDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "effectArgs",
+                "as": "array"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "AddSprite",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "x",
+                "as": "float"
+            },
+            {
+                "attribute": "y",
+                "as": "float"
+            },
+            {
+                "attribute": "effect",
+                "as": "string"
+            },
+            {
+                "attribute": "effectDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "effectArgs",
+                "as": "array"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "RemoveSprite",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "effect",
+                "as": "string"
+            },
+            {
+                "attribute": "effectDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "effectArgs",
+                "as": "float"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "PlaySound",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "volume",
+                "as": "float"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "Custom",
+        "rule": [
+            {
+                "attribute": "action",
+                "as": "string"
+            },
+            {
+                "attribute": "args",
+                "as": "array"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    }
+]

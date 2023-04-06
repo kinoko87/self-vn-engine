@@ -1,0 +1,8 @@
+If
+GotoFile
+ChangeBGM
+StopBGM
+ChangeBG
+AddSprite
+RemoveSprite
+PlaySound

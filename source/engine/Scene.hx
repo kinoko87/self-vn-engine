@@ -14,7 +14,7 @@ import flixel.addons.transition.FlxTransitionableState;
 
 typedef SceneFile = {
 	var initialBackground:{x:Float, y:Float, image:String}
-	var initialBGM:String;
+	var initialBGM:{song:String, volume:Float, ?looped:Bool, ?fadeInDuration:Float, ?fadeOutDuration:Float};
 	var initialDialogue:String;
 	var transIn:{type: TransitionType, duration: Float, color: Int};
 	var transOut:{type: TransitionType, duration: Float, color: Int};
@@ -24,14 +24,14 @@ typedef SceneFile = {
 class Scene extends FlxTransitionableState
 {
 
-	var sceneFile:SceneFile;
+	public var sceneFile:SceneFile;
 
 	public var background:FlxSprite;
 	public var backgroundSprites:FlxTypedGroup<FlxSprite>;
 	public var foregroundSprites:FlxTypedGroup<FlxSprite>;
 	public var UI:FlxTypedGroup<FlxSprite>;
 
-	public var dialogue:Array<Array<Dynamic>>;
+	public var dialogue:Array<Action>;
 	public var dialogueBox:DialogueBox;
 
 	public var spritePresets:Map<String, {img:String, clipRect:FlxRect}> = [];
@@ -68,13 +68,16 @@ class Scene extends FlxTransitionableState
 
 
 		background = new FlxSprite(sceneFile.initialBackground.x, sceneFile.initialBackground.y);
-		if (sceneFile.initialBackground.image != null && sceneFile.initialBGM.length > 0)
+		
+		if (sceneFile.initialBackground.image != null && sceneFile.initialBackground.image.length > 0)
 			background.loadGraphic(sceneFile.initialBackground.image);	
 
 		backgroundSprites.add(background);
 
-		if (sceneFile.initialBGM != null && sceneFile.initialBGM.length > 0)
-			FlxG.sound.playMusic(sceneFile.initialBGM);
+		if (sceneFile.initialBGM != null && sceneFile.initialBGM.song.length > 0) {
+			FlxG.sound.playMusic(sceneFile.initialBGM.song);
+			FlxG.sound.music.volume = sceneFile.initialBGM.volume;
+		}
 		dialogueBox = new DialogueBox(60, 420, dialogue, this);
 
 		UI.add(dialogueBox);

@@ -2,18 +2,9 @@
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
     <Choices>
         <Choice>Hi!</Choice>
-        <Choice goto="goodbye">Bye!</Choice>
+        <Choice goto="bye">Bye.</Choice>
     </Choices>
-    <Talk name="mari">Hello there!</Talk>
+    <Talk name="mari">Hello!</Talk>
     <End/>
-    <Talk name="mari" id="goodbye">Wait...why?!</Talk>
-    <Choices>
-        <Choice >I'm joking</Choice>
-        <Choice goto="hate">Because I hate you</Choice>
-    </Choices>
-    <Talk name="mari">Oh! Haha...</Talk>
-    <End/>
-    <Talk name="mari" id="hate">Oh...</Talk>
-    <GotoFile file="assets/ok.xml"/>
-    <End/>
+    <Talk name="mari" id="bye">Aww....</Talk>
 </Dialogue>
