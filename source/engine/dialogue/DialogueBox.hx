@@ -1,5 +1,6 @@
 package engine.dialogue;
 
+import flixel.input.keyboard.FlxKey;
 import engine.dialogue.DialogueParser.Action;
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
@@ -41,10 +42,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	public var isDone:Bool = false;
 	
-	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "num" => 12];
+	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "true"=>true, "null"=>null];
 
 	//							 id      sprite
 	public var activeSprites:Map<String, FlxSprite> = [];
+	//							id		sound
 	public var activeSounds:Map<String, FlxSound> = [];
 
 	private var currentFadeOutDuration:Float = 0;
@@ -75,11 +77,14 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		on("AddSprite", onAddSprite);
 		on("RemoveSprite", onRemoveSprite);
 		on("PlaySound", onPlaySound);
+		on("Set", _ -> {FlxG.save.data.stuff[_["variable"]] = _["to"];});
 		on("Custom", onCustom);
 
 		autoprogressables = Assets.getText("assets/data/engine/autoprogressables.txt").split('\n');
 
 		currentFadeOutDuration = scene.sceneFile.initialBGM.fadeOutDuration;
+
+		trace(currentData.type);
 
 		performActions();
 	}
@@ -143,6 +148,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	function onChoiceAccept() {
 		var curChoice = choices[choiceIndex];
 
+
 		if (curChoice.goto != null) {
 			for (i in data) {
 				if (i.elm["id"] != null && i.elm["id"] == curChoice.goto) {
@@ -156,6 +162,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 						choiceSprites.remove(choiceSprites[0]);
 					}
 
+					trace('ok');
+
 					isSelectingChoice = false;
 					choiceIndex = 0;
 					return;
@@ -163,6 +171,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			}
 		}
 
+		trace('yea');
 		index++;
 		currentData = data[index];
 		performActions();
@@ -202,6 +211,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (tempIndex != -1)
 			index = tempIndex;
 		currentData = data[index];
+		performActions();
 	}
 
 	function onGotoFile(elm:Map<String, Dynamic>) {

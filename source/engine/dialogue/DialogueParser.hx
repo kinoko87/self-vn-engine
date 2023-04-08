@@ -65,8 +65,6 @@ class DialogueParser
 				for (a in rule) {
 					switch (a.as) {
 						case "string", null:
-							if (a.defaultValue == null)
-								a.defaultValue = "";
 							if (a.from != "innerData")
 								action.set(a.attribute, element.has.resolve(a.from) ? element.att.resolve(a.from) : a.defaultValue);
 							else

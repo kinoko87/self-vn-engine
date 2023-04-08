@@ -1,0 +1,30 @@
+[
+    {
+        "control": "UP",
+        "keys": [38]
+    },
+    {
+        "control": "DOWN",
+        "keys": [40]
+    },
+    {
+        "control": "LEFT",
+        "keys": [37]
+    },
+    {
+        "control": "RIGHT",
+        "keys": [39]
+    },
+    {
+        "control": "ACCEPT",
+        "keys": [13]
+    },
+    {
+        "control": "SPEED_UP",
+        "keys": [16]
+    },
+    {
+        "control": "BACK",
+        "keys": [27]
+    }
+]

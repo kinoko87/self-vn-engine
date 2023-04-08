@@ -1,4 +1,6 @@
 <Dialogue>
+    <If value="debug" is="false" goto="bye"/>
+    <If value="debug" is="true" goto="debug"/>
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
     <Choices>
         <Choice>Hi!</Choice>
@@ -7,4 +9,5 @@
     <Talk name="mari">Hello!</Talk>
     <End/>
     <Talk name="mari" id="bye">Aww....</Talk>
+    <Talk name="mari" id="debug">DEBUG</Talk>
 </Dialogue>

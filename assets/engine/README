@@ -1,0 +1,5 @@
+Be careful with editing files in the engine/ folder as they may affect gameplay and implementation of crucial base features.
+
+Note: The controls.json file is not to be editted by the user, the controls file is only used when there is no existing binds
+found for a user. Modifying controls is up to the developer themselves, either by a GUI implementation or just a simple
+file implementation. 
