@@ -7,3 +7,4 @@ AddSprite
 RemoveSprite
 PlaySound
 Set
+Custom

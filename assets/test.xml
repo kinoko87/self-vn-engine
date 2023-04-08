@@ -1,7 +1,10 @@
 <Dialogue>
-    <If value="debug" is="false" goto="bye"/>
-    <If value="debug" is="true" goto="debug"/>
+    <ChangeBG file="assets/images/milk_fanart_2.jpg" x="35" y="35" effect="fade" effectArgs="0, 1" effectDuration="1"/>
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
+    <!-- <GotoFile file="assets/ok.xml"/> -->
+    <!-- <Custom action="OK" args="1,2"/> -->
+    <!-- <ChangeBGM /> -->
+    <ChangeBG file="$same" effect="fade" effectArgs="1, 0" effectDuration="1"/>
     <Choices>
         <Choice>Hi!</Choice>
         <Choice goto="bye">Bye.</Choice>
@@ -9,5 +12,7 @@
     <Talk name="mari">Hello!</Talk>
     <End/>
     <Talk name="mari" id="bye">Aww....</Talk>
-    <Talk name="mari" id="debug">DEBUG</Talk>
+    <End/>
+    <Talk name="debug" id="debug">HELLO</Talk>
+
 </Dialogue>

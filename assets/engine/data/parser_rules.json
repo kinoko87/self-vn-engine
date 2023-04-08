@@ -127,11 +127,13 @@
             },
             {
                 "attribute": "x",
-                "as": "float"
+                "as": "float",
+                "defaultValue": "none"
             },
             {
                 "attribute": "y",
-                "as": "float"
+                "as": "float",
+                "defaultValue": "none"
             },
             {
                 "attribute": "effect",

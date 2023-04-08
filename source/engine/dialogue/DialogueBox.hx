@@ -84,7 +84,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		currentFadeOutDuration = scene.sceneFile.initialBGM.fadeOutDuration;
 
-		trace(currentData.type);
+		trace(data);
 
 		performActions();
 	}
@@ -132,7 +132,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		isSelectingChoice = true;
 
-		if (choices.length == 0)
+		if (choiceSprites.length == 0)
 			createChoiceSprites(choices);
 	}
 
@@ -249,11 +249,28 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onChangeBG(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		if (!Assets.exists(file)) {
-			throw "[onChangeBG] Could not find file: " + file;
+		if (file != "$same") {
+			if (!Assets.exists(file)) {
+				throw "[onChangeBG] Could not find file: " + file;
+			}
+
+			scene.background.loadGraphic(elm["file"]);
 		}
 
-		scene.background.loadGraphic(elm["file"]);
+		trace(elm);
+
+		if (elm["x"] == "none") {
+			if (file != "$same")
+				elm["x"] = 0;
+			else
+				elm["x"] = scene.background.x;
+		}
+		if (elm["y"] == "none") {
+			if (file != "$same")
+				elm["y"] = 0;
+			else
+				elm["y"] = scene.background.y;
+		}
 		scene.background.setPosition(elm["x"], elm["y"]);
 
 		switch (elm["effect"]) {
@@ -262,7 +279,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					var fadeTo:Float = 1;
 					if (elm.exists("effectArgs")) {
 					if (elm["effectArgs"].length > 0)
-						fadeFrom = Std.parseFloat(elm["effecArgs"][0]);
+						fadeFrom = Std.parseFloat(elm["effectArgs"][0]);
 					if (elm["effectArgs"].length > 1)
 						fadeTo = Std.parseFloat(elm["effectArgs"][1]);
 					scene.background.alpha = fadeFrom;
@@ -358,7 +375,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	}
 
 	function onCustom(elm:Map<String, Dynamic>) {
-
 	}
 
 
@@ -374,7 +390,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		var accept:Bool = FlxG.keys.justPressed.ENTER;
 		var speedUp:Bool = FlxG.keys.pressed.SHIFT;
 
-		if (isSelectingChoice) {
+		if (isSelectingChoice && choiceSprites.length > 0) {
 			if (up) {
 				trace("EEEEEYP");
 				if (--choiceIndex < 0)
@@ -401,6 +417,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 
 		while (autoprogressables.contains(currentData.type)) {
+			trace("Autoprogressable");
 			index++;
 			currentData = data[index];
 			performActions();
@@ -426,7 +443,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 
 		if (!isDone && !isTalking && !isSelectingChoice && accept) {
-			trace("Hey.");
 			index++;
 			currentData = data[index];
 
@@ -435,6 +451,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	}
 
 	public inline function performActions() {
+		if (currentData.type == "Choices"){
+			trace("YOU COMPLETE FUCKING FAGGOT");
+			onChoices(currentData.elm);
+			return;
+		}
 		trace(currentData.type, actionCallbacks.get(currentData.type));
 		if (actionCallbacks.exists(currentData.type))
 			actionCallbacks.get(currentData.type)(currentData.elm);

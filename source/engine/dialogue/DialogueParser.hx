@@ -45,11 +45,14 @@ class DialogueParser
 
 			if (element.name == "Choices") {
 				var choices:Array<{text:String, id:String, goto:String}> = [];
+				trace('what');
 
 				for (c in element.nodes.resolve("Choice"))
 				{
+
 					var id:String = c.has.id ? c.att.id : null;
 					var goto:String = c.has.goto ? c.att.goto : "";
+					trace('hey', c.innerData, id, goto);
 					choices.push({text: c.innerData, id: id, goto: goto});
 				}
 
