@@ -1,5 +1,6 @@
 package engine;
 
+import flixel.animation.FlxAnimation;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import haxe.Json;
 import lime.utils.Assets;
@@ -18,7 +19,7 @@ typedef SceneFile = {
 	var initialDialogue:String;
 	var transIn:{type: TransitionType, duration: Float, color: Int};
 	var transOut:{type: TransitionType, duration: Float, color: Int};
-	var spritePresets:Array<{name:String, image:String, rect:{x:Float, y:Float, w:Float, h:Float}}>;
+	var spritePresets:Array<{name:String, image:String, rect:{x:Float, y:Float, w:Float, h:Float}, anims:Array<{name:String, frames:Array<Int>, framerate:Int, ?looped:Bool}>}>;
 }
 
 class Scene extends FlxTransitionableState
@@ -34,7 +35,7 @@ class Scene extends FlxTransitionableState
 	public var dialogue:Array<Action>;
 	public var dialogueBox:DialogueBox;
 
-	public var spritePresets:Map<String, {img:String, clipRect:FlxRect}> = [];
+	public var spritePresets:Map<String, {img:String, clipRect:FlxRect, ?anims:Array<{name:String, frames:Array<Int>, framerate:Int, ?looped:Bool}>}> = [];
 
 	public function new(sceneFilePath:String)
 	{
@@ -47,7 +48,7 @@ class Scene extends FlxTransitionableState
 		if (sceneFile.spritePresets != null) {
 			for (i in sceneFile.spritePresets) {
 				var r = new FlxRect(i.rect.x, i.rect.y, i.rect.w, i.rect.h);
-				spritePresets.set(i.name, {img: i.image, clipRect: r});
+				spritePresets.set(i.name, {img: i.image, clipRect: r, anims: i.anims});	
 			}
 		}
 	}

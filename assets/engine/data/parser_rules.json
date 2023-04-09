@@ -209,6 +209,30 @@
         ]
     },
     {
+        "name": "ApplyEffect",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "effect",
+                "as": "string"
+            },
+            {
+                "attribute": "effectArgs",
+                "as": "array"
+            },
+            {
+                "attribute": "effectDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
         "name": "PlaySound",
         "rule": [
             {

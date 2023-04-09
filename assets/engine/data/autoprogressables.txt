@@ -8,3 +8,6 @@ RemoveSprite
 PlaySound
 Set
 Custom
+PlayAnim
+StopAnim
+ApplyEffect

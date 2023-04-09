@@ -22,7 +22,7 @@ class DialogueParser
 		trace("[PARSER RULE ENTRIES]");
 		trace("---------------------");
 		#end
-		var ruleJson:Array<{name:String, rule:ParserRule}> = Json.parse(Assets.getText('assets/data/engine/parser_rules.json'));
+		var ruleJson:Array<{name:String, rule:ParserRule}> = Json.parse(Assets.getText('assets/engine/data/parser_rules.json'));
 		for (r in 0...ruleJson.length) {
 			for (c in ruleJson[r].rule) {
 				if (c.from == null) {

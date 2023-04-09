@@ -32,7 +32,7 @@ class Controls {
     }
 
     private function getControlsFile() {
-        var f = "assets/data/engine/controls.json";
+        var f = "assets/engine/data/controls.json";
 
         if (!Assets.exists(f))
             throw "Could not find controls file \"" + f + "\"";

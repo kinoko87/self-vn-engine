@@ -76,15 +76,18 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		on("ChangeBG", onChangeBG);
 		on("AddSprite", onAddSprite);
 		on("RemoveSprite", onRemoveSprite);
+		on("PlayAnim", onPlayAnim);
+		on("StopAnim", onStopAnim);
 		on("PlaySound", onPlaySound);
+		on("ApplyEffect", onApplyEffect);
 		on("Set", _ -> {FlxG.save.data.stuff[_["variable"]] = _["to"];});
 		on("Custom", onCustom);
 
-		autoprogressables = Assets.getText("assets/data/engine/autoprogressables.txt").split('\n');
+		autoprogressables = Assets.getText("assets/engine/data/autoprogressables.txt").split('\n');
 
 		currentFadeOutDuration = scene.sceneFile.initialBGM.fadeOutDuration;
 
-		trace(data);
+		activeSprites["background"] = scene.background;
 
 		performActions();
 	}
@@ -302,6 +305,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			sprite.clipRect = presetData.clipRect;
 			sprite.width = clipRect.width;
 			sprite.height = clipRect.height;
+
+			for (anim in scene.spritePresets.get(file).anims) {
+				sprite.animation.add(anim.name, anim.frames, anim.framerate, anim.looped);
+				if (anim.name == "idle")
+					sprite.animation.play("idle");
+			}
 		} else {
 			sprite.loadGraphic(file);
 		}
@@ -331,6 +340,18 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 	}
 
+	function onPlayAnim(elm:Map<String, Dynamic>) {
+		var sprite = activeSprites.get(elm["spriteID"]);
+
+		if (sprite.animation.exists(elm["name"])) {
+			sprite.animation.play(elm["name"], elm["force"], elm["reversed"]);
+		}
+	}
+
+	function onStopAnim(elm:Map<String, Dynamic>) {
+		activeSprites.get(elm["spriteID"]).animation.stop();
+	}
+
 	function onRemoveSprite(elm:Map<String, Dynamic>) {
 		if (!activeSprites.exists(elm["spriteID"])) {
 			trace("[onRemoveSprite] Sprite with id of \"" + elm["spriteID"] + "\" not found"); 
@@ -356,15 +377,31 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					activeSprites.remove(elm["spriteID"]);
 					scene.foregroundSprites.remove(sprite);
 					sprite.kill();
-					sprite.destroy();
 				}});
+			default:
+				activeSprites.remove(elm["spriteID"]);
+				scene.foregroundSprites.remove(sprite);
+				sprite.kill();
+		}
+	}
+
+	function onApplyEffect(elm:Map<String, Dynamic>) {
+		if (!activeSprites.exists(elm["spriteID"])) {
+			throw "Sprite with ID of \"" + elm["spriteID"] + "\" does not exist!";
+		}
+
+		var sprite = activeSprites.get(elm["spriteID"]);
+		
+		switch (elm["effect"]) {
+			default:
+				sprite.shader = null;
 		}
 	}
 
 	function onPlaySound(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		if (!Assets.exists(file) || !scene.spritePresets.exists(file)) {
-			throw "[onAddSprite] Could not find file/preset: " + file;
+		if (!Assets.exists(file)) {
+			throw "[onPlaySound] Could not find file: " + file;
 		}
 
 		var sound = new FlxSound().loadEmbedded(file, elm["looped"], true);
