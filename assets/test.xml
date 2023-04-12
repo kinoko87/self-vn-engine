@@ -1,10 +1,5 @@
 <Dialogue>
-    <ChangeBG file="assets/images/milk_fanart_2.jpg" x="35" y="35" effect="fade" effectArgs="0, 1" effectDuration="1"/>
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
-    <!-- <GotoFile file="assets/ok.xml"/> -->
-    <!-- <Custom action="OK" args="1,2"/> -->
-    <!-- <ChangeBGM /> -->
-    <ChangeBG file="$same" effect="fade" effectArgs="1, 0" effectDuration="1"/>
     <Choices>
         <Choice>Hi!</Choice>
         <Choice goto="bye">Bye.</Choice>

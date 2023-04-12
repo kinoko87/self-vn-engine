@@ -293,7 +293,9 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onAddSprite(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		if (!Assets.exists(file) || !scene.spritePresets.exists(file)) {
+		trace(Assets.exists(file));
+		trace(!Assets.exists(file));
+		if (Assets.exists(file) == false /*|| !scene.spritePresets.exists(file)*/) {
 			throw "[onAddSprite] Could not find file/preset: " + file;
 		}
 
@@ -324,6 +326,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		#end
 		activeSprites.set(elm["id"], sprite);
 
+		trace(elm["effectArgs"]);
+
 
 		switch (elm["effect"]) {
 			case "fade":
@@ -331,7 +335,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					var fadeTo:Float = 1;
 					if (elm.exists("effectArgs")) {
 					if (elm["effectArgs"].length > 0)
-						fadeFrom = Std.parseFloat(elm["effecArgs"][0]);
+						fadeFrom = Std.parseFloat(elm["effectArgs"][0]);
 					if (elm["effectArgs"].length > 1)
 						fadeTo = Std.parseFloat(elm["effectArgs"][1]);
 					sprite.alpha = fadeFrom;
@@ -353,13 +357,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	}
 
 	function onRemoveSprite(elm:Map<String, Dynamic>) {
-		if (!activeSprites.exists(elm["spriteID"])) {
+		if (activeSprites.get(elm["spriteID"]) == null) {
 			trace("[onRemoveSprite] Sprite with id of \"" + elm["spriteID"] + "\" not found"); 
 			return;
 		}
 
 		var sprite = activeSprites.get(elm["spriteID"]);
-
 
 		switch (elm["effect"]) {
 			case "fade":
@@ -367,13 +370,13 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					var fadeTo:Float = 0;
 					if (elm.exists("effectArgs")) {
 					if (elm["effectArgs"].length > 0)
-						fadeFrom = Std.parseFloat(elm["effecArgs"][0]);
+						fadeFrom = Std.parseFloat(elm["effectArgs"][0]);
 					if (elm["effectArgs"].length > 1)
 						fadeTo = Std.parseFloat(elm["effectArgs"][1]);
 					sprite.alpha = fadeFrom;
 				}
 
-				FlxTween.tween(scene.background, {alpha: fadeTo}, elm["effectDuration"], {onComplete: _ -> {
+				FlxTween.tween(sprite, {alpha: fadeTo}, elm["effectDuration"], {onComplete: _ -> {
 					activeSprites.remove(elm["spriteID"]);
 					scene.foregroundSprites.remove(sprite);
 					sprite.kill();
@@ -438,8 +441,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 					choiceIndex = 0;
 			}
 
-			trace('indekkusu choisu: ', choiceIndex);
-
 			choiceSprites[choiceIndex].color = FlxColor.WHITE;
 
 			for (i in 0...choiceSprites.length) {
@@ -452,11 +453,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			}
 		}
 
-
 		while (autoprogressables.contains(currentData.type)) {
 			trace("Autoprogressable");
+			trace('autoprogressable: ', currentData.type);
 			index++;
 			currentData = data[index];
+			trace('new', currentData.type);
 			performActions();
 		}
 
@@ -489,7 +491,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	public inline function performActions() {
 		if (currentData.type == "Choices"){
-			trace("YOU COMPLETE FUCKING FAGGOT");
 			onChoices(currentData.elm);
 			return;
 		}
@@ -501,7 +502,23 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	function completeCallback()
 	{
 		isTalking = false;
+
 		var next = data[index + 1];
+
+		if (next != null && autoprogressables.contains(next.type)) {
+			trace('okbuddy sex');
+			currentData= data[++index];
+			next = data[index+1];
+			performActions();
+		}
+
+		while (next != null && autoprogressables.contains(next.type)) {
+			trace('autoprogressable: ', currentData.type);
+			index++;
+			currentData = data[index];
+			next = data[index+1];
+			performActions();
+		}
 
 		if (next != null && next.type == "Choices")
 		{
