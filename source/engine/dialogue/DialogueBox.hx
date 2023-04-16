@@ -15,6 +15,12 @@ import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.utils.Assets;
 
+// There are some limitations to making choices a seperate element
+// But I'm too lazy to implement choices as apart of the Talk element
+// so the engine's going to have to have an issue with choices not
+// showing up when the next element is an autoprogressable that has
+// the waitForAccept attribute set as true
+
 // TODO: Polishing and possible optimizations
 class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 {
@@ -396,8 +402,20 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		var sprite = activeSprites.get(elm["spriteID"]);
 		
 		switch (elm["effect"]) {
+			case "fade":
+				var fadeFrom:Float = 0;
+				var fadeTo:Float = 1;
+				if (elm.exists("effectArgs")) {
+				if (elm["effectArgs"].length > 0)
+					fadeFrom = Std.parseFloat(elm["effectArgs"][0]);
+				if (elm["effectArgs"].length > 1)
+					fadeTo = Std.parseFloat(elm["effectArgs"][1]);
+				sprite.alpha = fadeFrom;
+			}
+			FlxTween.tween(sprite, {alpha: fadeTo}, elm["effectDuration"]);
 			default:
 				sprite.shader = null;
+				
 		}
 	}
 
@@ -506,6 +524,10 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		var next = data[index + 1];
 
 		if (next != null && autoprogressables.contains(next.type)) {
+			trace(next.elm);
+			if (next.elm["waitForAccept"] != null && next.elm["waitForAccept"] == true) {
+				return;
+			}
 			trace('okbuddy sex');
 			currentData= data[++index];
 			next = data[index+1];

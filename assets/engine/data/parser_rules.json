@@ -50,6 +50,10 @@
                 "as": "string"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -68,6 +72,10 @@
             {
                 "attribute": "file",
                 "as": "string"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
             },
             {
                 "attribute": "id"
@@ -102,6 +110,10 @@
                 "as": "float"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -112,6 +124,10 @@
             {
                 "attribute": "fadeOutDuration",
                 "as": "float"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
             },
             {
                 "attribute": "id"
@@ -148,6 +164,10 @@
                 "as": "array"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -180,6 +200,10 @@
                 "as": "array"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -202,6 +226,10 @@
             {
                 "attribute": "effectArgs",
                 "as": "float"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
             },
             {
                 "attribute": "id"
@@ -228,6 +256,10 @@
                 "as": "float"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -244,6 +276,10 @@
                 "as": "float"
             },
             {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
                 "attribute": "id"
             }
         ]
@@ -254,6 +290,10 @@
             {
                 "attribute": "variable",
                 "as": "string"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
             },
             {
                 "attribute": "to",
@@ -271,6 +311,10 @@
             {
                 "attribute": "args",
                 "as": "array"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
             },
             {
                 "attribute": "id"

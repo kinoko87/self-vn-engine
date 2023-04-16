@@ -44,6 +44,8 @@
 	<haxelib name="flixel-ui" />
 
 	<haxeib name="hxCodec" />
+	<!-- Allows -->
+	<haxelib name="flixel-shadertoy-shader"/>
 
 	<!--In case you want to use nape with flixel-->
 	<!--<haxelib name="nape-haxe4" />-->
