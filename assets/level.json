@@ -1,14 +1,14 @@
 {
     "initialBackground": {
-        "image": "none",
+        "image": null,
         "x": 0,
         "y": 0
     },
     "initialBGM": {
-        "song": "none",
+        "song": "assets/music/soft_goth.wav",
         "volume": 1,
-        "fadeInDuration": 0,
-        "fadeOutDuration": 0.3,
+        "fadeInDuration": 3,
+        "fadeOutDuration": 3,
         "oneshot": false
     },
     "initialDialogue": "assets/test.xml",

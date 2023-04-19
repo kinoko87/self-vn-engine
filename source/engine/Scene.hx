@@ -75,8 +75,14 @@ class Scene extends FlxTransitionableState
 
 		backgroundSprites.add(background);
 
-		if (sceneFile.initialBGM != null && sceneFile.initialBGM.song.length > 0) {
+		trace(sceneFile);
+		trace(sceneFile.initialBGM);
+		trace(sceneFile.initialBGM != null, sceneFile.initialBGM.song != null, sceneFile.initialBGM.song.length> 0);
+
+		if (sceneFile.initialBGM != null && sceneFile.initialBGM.song != null && sceneFile.initialBGM.song.length > 0) {
+			trace("OHAYOOO!!!!!");
 			FlxG.sound.playMusic(sceneFile.initialBGM.song);
+			trace(sceneFile.initialBGM.volume);
 			FlxG.sound.music.volume = sceneFile.initialBGM.volume;
 		}
 		dialogueBox = new DialogueBox(60, 420, dialogue, this);

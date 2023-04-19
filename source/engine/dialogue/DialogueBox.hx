@@ -96,6 +96,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		activeSprites["background"] = scene.background;
 
 		performActions();
+		while (autoprogressables.contains(currentData.type)) {
+			index++;
+			currentData = data[index];
+			// trace(currentData.type);
+			performActions();
+		}
 	}
 
 	function initializeObjects() {
@@ -124,13 +130,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onTalk(elm:Map<String, Dynamic>)
 	{
-		trace("Balls");
 		isTalking = true;
 		nameText.text = elm["name"];
 		dialogueText.size = elm["size"];
 		dialogueText.resetText(elm["text"]);
 		dialogueText.start(elm["speed"]);
-		trace(elm["speed"], elm["text"], elm["skip"]);
 		if (elm["skip"])
 			dialogueText.skip();
 	}
@@ -163,16 +167,14 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 				if (i.elm["id"] != null && i.elm["id"] == curChoice.goto) {
 					index = data.indexOf(i);
 					currentData = data[index];
-					performActions();
+					if (!autoprogressables.contains(currentData.type))
+						performActions();
 
 					while (choiceSprites.length > 0) {
 						remove(choiceSprites[0]);
 						choiceSprites[0].destroy();
 						choiceSprites.remove(choiceSprites[0]);
 					}
-
-					trace('ok');
-
 					isSelectingChoice = false;
 					choiceIndex = 0;
 					return;
@@ -180,10 +182,10 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			}
 		}
 
-		trace('yea');
 		index++;
 		currentData = data[index];
-		performActions();
+		if (!autoprogressables.contains(currentData.type))
+			performActions();
 
 		while (choiceSprites.length > 0) {
 			remove(choiceSprites[0]);
@@ -220,7 +222,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (tempIndex != -1)
 			index = tempIndex;
 		currentData = data[index];
-		performActions();
+		if (!autoprogressables.contains(currentData.type))
+			performActions();
 	}
 
 	function onGotoFile(elm:Map<String, Dynamic>) {
@@ -232,7 +235,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		index = 0;
 		data = DialogueParser.parse(Assets.getText(file));
 		currentData = data[0];
-		performActions();
+		if (!autoprogressables.contains(currentData.type))
+			performActions();
 	}
 
 	function onChangeBGM(elm:Map<String, Dynamic>) {
@@ -243,17 +247,27 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		var song = new FlxSound().loadEmbedded(file);
 		song.looped = !elm["oneshot"];
-		FlxG.sound.music.fadeOut(currentFadeOutDuration, 0, _ -> {
+		if (FlxG.sound.music != null) {
+			FlxG.sound.music.fadeOut(currentFadeOutDuration, 0, _ -> {
+				FlxG.sound.music = song;
+				song.play();
+				song.fadeIn(elm["fadeInDuration"], elm["initialVolume"], elm["volume"]);
+			});
+		} else {
 			FlxG.sound.music = song;
 			song.play();
 			song.fadeIn(elm["fadeInDuration"], elm["initialVolume"], elm["volume"]);
-		});
+		}
 		
 		currentFadeOutDuration = elm["fadeOutDuration"];
 	}
 
 	function onStopBGM(elm:Map<String, Dynamic>) {
-		FlxG.sound.music.fadeOut(elm["fadeOutDuration"], 0, _ -> {FlxG.sound.music.stop();});
+		if (currentFadeOutDuration == 0){
+			FlxG.sound.music.stop();
+			return;
+		}
+		FlxG.sound.music.fadeOut(currentFadeOutDuration, 0, _ -> {FlxG.sound.music.stop();});
 	}
 
 	function onChangeBG(elm:Map<String, Dynamic>) {
@@ -265,8 +279,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 			scene.background.loadGraphic(elm["file"]);
 		}
-
-		trace(elm);
 
 		if (elm["x"] == "none") {
 			if (file != "$same")
@@ -299,8 +311,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onAddSprite(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		trace(Assets.exists(file));
-		trace(!Assets.exists(file));
 		if (Assets.exists(file) == false /*|| !scene.spritePresets.exists(file)*/) {
 			throw "[onAddSprite] Could not find file/preset: " + file;
 		}
@@ -331,8 +341,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 		#end
 		activeSprites.set(elm["id"], sprite);
-
-		trace(elm["effectArgs"]);
 
 
 		switch (elm["effect"]) {
@@ -450,11 +458,9 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		if (isSelectingChoice && choiceSprites.length > 0) {
 			if (up) {
-				trace("EEEEEYP");
 				if (--choiceIndex < 0)
 					choiceIndex = choices.length - 1;
 			} else if (down) {
-				trace("DDDDDDYP");
 				if (++choiceIndex > choices.length - 1)
 					choiceIndex = 0;
 			}
@@ -472,11 +478,18 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 
 		while (autoprogressables.contains(currentData.type)) {
-			trace("Autoprogressable");
-			trace('autoprogressable: ', currentData.type);
+			trace('autoprogressable: ', currentData.type, "x::" + ++x);
+			performActions();
 			index++;
 			currentData = data[index];
-			trace('new', currentData.type);
+			trace('CURRENDATA:',currentData);
+			if (autoprogressables.contains(currentData.type)) {
+				trace(currentData);
+				performActions();
+			} else {trace("NOT AUTOPROGRESABLE", currentData); break;};
+		}
+
+		if (currentData.type == "End") {
 			performActions();
 		}
 
@@ -512,7 +525,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			onChoices(currentData.elm);
 			return;
 		}
-		trace(currentData.type, actionCallbacks.get(currentData.type));
+		trace("a: ",currentData.type, actionCallbacks.get(currentData.type));
 		if (actionCallbacks.exists(currentData.type))
 			actionCallbacks.get(currentData.type)(currentData.elm);
 	}
@@ -523,23 +536,18 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		var next = data[index + 1];
 
+		if (currentData.elm["text"] == "cunt")
+			return;
+
 		if (next != null && autoprogressables.contains(next.type)) {
-			trace(next.elm);
 			if (next.elm["waitForAccept"] != null && next.elm["waitForAccept"] == true) {
 				return;
 			}
-			trace('okbuddy sex');
 			currentData= data[++index];
-			next = data[index+1];
-			performActions();
-		}
-
-		while (next != null && autoprogressables.contains(next.type)) {
-			trace('autoprogressable: ', currentData.type);
-			index++;
-			currentData = data[index];
-			next = data[index+1];
-			performActions();
+			// trace("!!!!!!!!!!!!!!!!!!!", currentData);
+			// performActions();
+			// currentData = data[++index];
+			// trace(currentData);
 		}
 
 		if (next != null && next.type == "Choices")

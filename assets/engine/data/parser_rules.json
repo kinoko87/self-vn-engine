@@ -91,11 +91,13 @@
             },
             {
                 "attribute": "volume",
-                "as": "float"
+                "as": "float",
+                "defaultValue": 1
             },
             {
                 "attribute": "initialVolume",
-                "as": "float"
+                "as": "float",
+                "defaultValue": 0
             },
             {
                 "attribute": "oneshot",
@@ -121,10 +123,6 @@
     {
         "name": "StopBGM",
         "rule": [
-            {
-                "attribute": "fadeOutDuration",
-                "as": "float"
-            },
             {
                 "attribute": "waitForAccept",
                 "as": "bool"
