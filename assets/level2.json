@@ -11,7 +11,7 @@
         "fadeOutDuration": 3,
         "oneshot": false
     },
-    "initialDialogue": "assets/test.xml",
+    "initialDialogue": "assets/ok.xml",
     "transIn": {
         "type": "fade",
         "duration": 0.3,

@@ -9,7 +9,8 @@
     <Talk name="mari">Hello!</Talk>
     <End/>
     <Talk name="mari" id="bye">Aww....</Talk>
-    <End/>
+    <ChangeScene file="assets/level2.json"/>
+    <!-- <End/> -->
     <Talk name="debug" id="debug">HELLO</Talk>
-
+    <!-- <End/> -->
 </Dialogue>

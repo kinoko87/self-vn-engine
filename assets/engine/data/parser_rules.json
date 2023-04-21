@@ -271,7 +271,8 @@
             },
             {
                 "attribute": "volume",
-                "as": "float"
+                "as": "float",
+                "defaultValue": 1
             },
             {
                 "attribute": "waitForAccept",
@@ -313,6 +314,30 @@
             {
                 "attribute": "waitForAccept",
                 "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "ChangeScene",
+        "rule": [
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "effect",
+                "as": "string"
+            },
+            {
+                "attribute": "effectDuration",
+                "as": "float"
+            },
+            {
+                "attribute": "effectArgs",
+                "as": "array"
             },
             {
                 "attribute": "id"

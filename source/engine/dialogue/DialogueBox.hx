@@ -48,14 +48,14 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	public var isDone:Bool = false;
 	
-	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "true"=>true, "null"=>null];
+	public var ifMap:Map<String, Dynamic> = ["debug" => #if debug true #else false #end, "true"=>true, "null"=>null, "test" => true];
 
 	//							 id      sprite
 	public var activeSprites:Map<String, FlxSprite> = [];
 	//							id		sound
 	public var activeSounds:Map<String, FlxSound> = [];
 
-	private var currentFadeOutDuration:Float = 0;
+	public var currentFadeOutDuration:Float = 0;
 
 		/**
 	 * Actions that that don't need user input to run. Achieved by checking if
@@ -86,7 +86,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		on("StopAnim", onStopAnim);
 		on("PlaySound", onPlaySound);
 		on("ApplyEffect", onApplyEffect);
-		on("Set", _ -> {FlxG.save.data.stuff[_["variable"]] = _["to"];});
+		on("Set", _ -> {Save.data.variables[_["variable"]] = _["to"];});
+		on("ChangeScene", onChangeScene);
 		on("Custom", onCustom);
 
 		autoprogressables = Assets.getText("assets/engine/data/autoprogressables.txt").split('\n');
@@ -440,6 +441,24 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		sound.autoDestroy = true;
 	}
 
+	// TODO: debug class
+
+	function onChangeScene(elm:Map<String, Dynamic>) {
+		var file = elm["file"];
+		if (!Assets.exists(file))
+			throw "[onChangeScene] Could not find file: " + file;
+		
+
+			trace("yoko");
+
+			switch (elm["effect"]) {
+				default: // default is fade
+					// Do some transition shit later. idk how FlxTransState works
+					FlxG.switchState(new Scene(file));
+			
+		}		
+	}
+
 	function onCustom(elm:Map<String, Dynamic>) {
 	}
 
@@ -478,15 +497,13 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 
 		while (autoprogressables.contains(currentData.type)) {
-			trace('autoprogressable: ', currentData.type, "x::" + ++x);
+			trace('autoprogressable: ', currentData.type);
 			performActions();
 			index++;
 			currentData = data[index];
-			trace('CURRENDATA:',currentData);
 			if (autoprogressables.contains(currentData.type)) {
-				trace(currentData);
 				performActions();
-			} else {trace("NOT AUTOPROGRESABLE", currentData); break;};
+			} else {trace("NOT AUTOPROGRESABLE", currentData); if (currentData.type=="Talk")index--; break;};
 		}
 
 		if (currentData.type == "End") {
@@ -512,6 +529,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			isDone = true;
 
 
+		// trace(currentData.type, index);
 		if (!isDone && !isTalking && !isSelectingChoice && accept) {
 			index++;
 			currentData = data[index];
@@ -525,7 +543,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			onChoices(currentData.elm);
 			return;
 		}
-		trace("a: ",currentData.type, actionCallbacks.get(currentData.type));
+		// trace(currentData.type, actionCallbacks.get(currentData.type));
 		if (actionCallbacks.exists(currentData.type))
 			actionCallbacks.get(currentData.type)(currentData.elm);
 	}

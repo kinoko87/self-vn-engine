@@ -55,6 +55,8 @@ class Scene extends FlxTransitionableState
 
 	public override function create() {
 
+		Save.bind(0);
+
 		backgroundSprites = new FlxTypedGroup<FlxSprite>();
 		foregroundSprites = new FlxTypedGroup<FlxSprite>();
 		UI = new FlxTypedGroup<FlxSprite>();
@@ -80,12 +82,11 @@ class Scene extends FlxTransitionableState
 		trace(sceneFile.initialBGM != null, sceneFile.initialBGM.song != null, sceneFile.initialBGM.song.length> 0);
 
 		if (sceneFile.initialBGM != null && sceneFile.initialBGM.song != null && sceneFile.initialBGM.song.length > 0) {
-			trace("OHAYOOO!!!!!");
 			FlxG.sound.playMusic(sceneFile.initialBGM.song);
-			trace(sceneFile.initialBGM.volume);
-			FlxG.sound.music.volume = sceneFile.initialBGM.volume;
+			FlxG.sound.music.fadeIn(sceneFile.initialBGM.fadeInDuration, 0, sceneFile.initialBGM.volume);
 		}
 		dialogueBox = new DialogueBox(60, 420, dialogue, this);
+		dialogueBox.currentFadeOutDuration = sceneFile.initialBGM.fadeOutDuration;
 
 		UI.add(dialogueBox);
 
@@ -93,6 +94,7 @@ class Scene extends FlxTransitionableState
 	}
 
 	public override function update(elapsed:Float) {
+		// trace(Save.data.variables["test"]);
 		if (FlxG.keys.justPressed.R)
 			FlxG.switchState(new Scene("assets/level.json"));
 		super.update(elapsed);
