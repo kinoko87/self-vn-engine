@@ -1,5 +1,7 @@
 package engine.dialogue;
 
+import hxcodec.VideoSprite;
+import hxcodec.VideoHandler;
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
 import engine.dialogue.DialogueParser.Action;
@@ -91,6 +93,9 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		on("ResumeAnim", _ -> {activeSprites.get(_["spriteID"]).animation.resume();});
 		on("PlaySound", onPlaySound);
 		on("ApplyEffect", onApplyEffect);
+		#if desktop
+		on("PlayVideo", onPlayVideo);
+		#end
 		on("Set", _ -> {Save.data.variables[_["variable"]] = _["to"];});
 		on("ChangeScene", onChangeScene);
 		on("Custom", onCustom);
@@ -458,6 +463,31 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		sound.autoDestroy = true;
 	}
 
+	#if desktop
+	var activeVideo:VideoSprite;
+	var videoPausesGame:Bool = false;
+
+	function onPlayVideo(elm:Map<String, Dynamic>) {
+		trace("PLAY VIDEO");
+		var v:VideoSprite;
+		v = new VideoSprite(elm["x"], elm["y"]);
+
+		scene.add(v);
+		activeVideo = v;
+
+		v.playVideo(elm["file"]);
+		videoPausesGame = elm["pauseGame"];
+
+		v.bitmap.finishCallback = () -> {
+			trace("FUCKING FINIHSED");
+			activeVideo.bitmap.stop();
+			scene.remove(activeVideo);
+			activeVideo.destroy();
+			activeVideo=null;
+			videoPausesGame= false;
+		}
+	}
+	#end
 	// TODO: debug class
 
 	function onChangeScene(elm:Map<String, Dynamic>) {
@@ -484,6 +514,21 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	public override function update(elapsed:Float) {
 		if (!isActive)
 			return;
+
+		#if desktop
+		if (videoPausesGame&&activeVideo!=null) {
+			var skip = FlxG.keys.justPressed.ENTER;
+			if (skip) {
+				activeVideo.bitmap.stop();
+				scene.remove(activeVideo);
+				activeVideo.destroy();
+				activeVideo=null;
+				videoPausesGame= false;
+			}
+
+			return;
+		}
+		#end
 
 		super.update(elapsed);
 		

@@ -1,9 +1,7 @@
 <Dialogue>
-    <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/>
-    <ApplyEffect spriteID="camera" effect="pixelate"/>
-    <ApplyEffect spriteID="uicamera" effect="pixelate"/>
+<PauseBGM/>
+    <PlayVideo file="assets/videos/one_piece.mp4" pauseGame="true"/>
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
-        <PauseBGM/>
     <Choices>
         <Choice>Hi!</Choice>
         <Choice goto="bye">Bye.</Choice>

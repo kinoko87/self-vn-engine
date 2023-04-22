@@ -384,6 +384,34 @@
         ]
     },
     {
+        "name": "PlayVideo",
+        "rule": [
+            {
+                "attribute": "x",
+                "as": "float"
+            },
+            {
+                "attribute": "y",
+                "as": "float"
+            },
+            {
+                "attribute": "file",
+                "as": "string"
+            },
+            {
+                "attribute": "pauseGame",
+                "as": "bool"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
         "name": "Set",
         "rule": [
             {
