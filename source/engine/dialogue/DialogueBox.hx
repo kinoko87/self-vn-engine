@@ -312,18 +312,23 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onAddSprite(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		if (Assets.exists(file) == false /*|| !scene.spritePresets.exists(file)*/) {
+		trace(scene.spritePresets);
+		trace(elm["file"]);
+		trace(scene.spritePresets.exists(elm["file"]));
+
+		if (Assets.exists(file) == false && !scene.spritePresets.exists(file)) {
 			throw "[onAddSprite] Could not find file/preset: " + file;
 		}
 
+		
 		var sprite:FlxSprite = new FlxSprite(elm["x"], elm["y"]);
+
 
 		if (scene.spritePresets.exists(file)) {
 			var presetData = scene.spritePresets.get(file);
-			sprite.loadGraphic(presetData.img);
-			sprite.clipRect = presetData.clipRect;
-			sprite.width = clipRect.width;
-			sprite.height = clipRect.height;
+			sprite.loadGraphic(presetData.image, true, Std.int(presetData.width), Std.int(presetData.height));
+			// sprite.width = presetData.width;
+			// sprite.height = presetData.height;
 
 			for (anim in scene.spritePresets.get(file).anims) {
 				sprite.animation.add(anim.name, anim.frames, anim.framerate, anim.looped);
@@ -333,6 +338,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		} else {
 			sprite.loadGraphic(file);
 		}
+
+		trace(sprite.animation.curAnim.name);
 
 		scene.foregroundSprites.add(sprite);
 

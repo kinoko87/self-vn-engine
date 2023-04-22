@@ -3,23 +3,24 @@ package engine;
 import flixel.FlxG;
 
 typedef SaveData = {
-    var level:Int;
+    var moment:String;
     var variables:Map<String, Dynamic>;
 }
 
 class Save {
 
-    public static var currentSave:Int = 0;
+    public static var currentSave:String;
 
     public static var data:SaveData;
 
-    public inline static function bind(?cSave:Int) {
+    public inline static function bind(?cSave:String) {
         currentSave = cSave;
         FlxG.save.bind("m78", "save-"+Std.string(save));
         
         if (FlxG.save.data.saveData == null) {
             var saveData:SaveData = {
-                level: 0,
+                        //chapter;scene
+                moment: "Chapter 0;Start",
                 variables: new Map<String, Dynamic>()
             };
             saveData.variables["test"] = true;

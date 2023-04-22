@@ -1,5 +1,6 @@
 <Dialogue>
-    <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/>
+    <AddSprite file="test" id="m"/>
+    <!-- <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/> -->
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
     <Choices>
         <Choice>Hi!</Choice>

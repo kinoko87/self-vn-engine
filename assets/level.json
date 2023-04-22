@@ -22,5 +22,21 @@
         "type": "fade",
         "duration": 0.3,
         "color": "black"
-    }
+    },
+    "spritePresets": [
+        {
+            "name": "test",
+            "width": 32,
+            "height": 64,
+            "image": "assets/images/milk_fanart_2.jpg",
+            "anims": [
+                {
+                    "name": "idle",
+                    "framerate": 4,
+                    "frames": [0, 1, 2, 3],
+                    "looped": true
+                }
+            ]
+        }
+    ]
 }

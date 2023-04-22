@@ -14,12 +14,21 @@ import flixel.math.FlxRect;
 import flixel.addons.transition.FlxTransitionableState;
 
 typedef SceneFile = {
-	var initialBackground:{x:Float, y:Float, image:String}
+	var levelInfo:{chapter:String, scene:String};
+	var initialBackground:{x:Float, y:Float, image:String};
 	var initialBGM:{song:String, volume:Float, ?looped:Bool, ?fadeInDuration:Float, ?fadeOutDuration:Float};
 	var initialDialogue:String;
 	var transIn:{type: TransitionType, duration: Float, color: Int};
 	var transOut:{type: TransitionType, duration: Float, color: Int};
-	var spritePresets:Array<{name:String, image:String, rect:{x:Float, y:Float, w:Float, h:Float}, anims:Array<{name:String, frames:Array<Int>, framerate:Int, ?looped:Bool}>}>;
+	var spritePresets:Array<Preset>;
+}
+
+typedef Preset = {
+	var name:String;
+	var image:String;
+	var width:Float;
+	var height:Float;
+	var anims:Array<{name:String, framerate:Int, frames:Array<Int>, ?looped:Bool}>;
 }
 
 class Scene extends FlxTransitionableState
@@ -35,7 +44,7 @@ class Scene extends FlxTransitionableState
 	public var dialogue:Array<Action>;
 	public var dialogueBox:DialogueBox;
 
-	public var spritePresets:Map<String, {img:String, clipRect:FlxRect, ?anims:Array<{name:String, frames:Array<Int>, framerate:Int, ?looped:Bool}>}> = [];
+	public var spritePresets:Map<String, Preset> = [];
 
 	public function new(sceneFilePath:String)
 	{
@@ -47,15 +56,14 @@ class Scene extends FlxTransitionableState
 
 		if (sceneFile.spritePresets != null) {
 			for (i in sceneFile.spritePresets) {
-				var r = new FlxRect(i.rect.x, i.rect.y, i.rect.w, i.rect.h);
-				spritePresets.set(i.name, {img: i.image, clipRect: r, anims: i.anims});	
+				spritePresets.set(i.name, i);
 			}
 		}
 	}
 
 	public override function create() {
 
-		Save.bind(0);
+		Save.bind("Save_1");
 
 		backgroundSprites = new FlxTypedGroup<FlxSprite>();
 		foregroundSprites = new FlxTypedGroup<FlxSprite>();
