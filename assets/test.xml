@@ -2,12 +2,15 @@
     <AddSprite file="test" id="m"/>
     <!-- <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/> -->
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
+        <PauseBGM/>
     <Choices>
         <Choice>Hi!</Choice>
         <Choice goto="bye">Bye.</Choice>
     </Choices>
-    <ApplyEffect effect="fade" effectArgs="1, .2" effectDuration="1" spriteID="m"/>
+    <!-- <ApplyEffect effect="fade" effectArgs="1, .2" effectDuration="1" spriteID="m"/> -->
     <Talk name="mari">Hello!</Talk>
+    <ResumeBGM/>
+    <PlayAnim spriteID="m" name="anim" forced="true" reversed="false"/>
     <End/>
     <Talk name="mari" id="bye">Aww....</Talk>
     <ChangeScene file="assets/level2.json"/>

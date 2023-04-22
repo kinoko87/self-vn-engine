@@ -85,10 +85,6 @@ class Scene extends FlxTransitionableState
 
 		backgroundSprites.add(background);
 
-		trace(sceneFile);
-		trace(sceneFile.initialBGM);
-		trace(sceneFile.initialBGM != null, sceneFile.initialBGM.song != null, sceneFile.initialBGM.song.length> 0);
-
 		if (sceneFile.initialBGM != null && sceneFile.initialBGM.song != null && sceneFile.initialBGM.song.length > 0) {
 			FlxG.sound.playMusic(sceneFile.initialBGM.song);
 			FlxG.sound.music.fadeIn(sceneFile.initialBGM.fadeInDuration, 0, sceneFile.initialBGM.volume);

@@ -13,7 +13,6 @@ class PlayState extends FlxState
 {
 	override public function create()
 	{
-		trace([for (x in DialogueParser.parse(Assets.getText("assets/test.xml"))) x.type]);
 		FlxG.switchState(new Scene("assets/level.json"));
 		super.create();
 	}

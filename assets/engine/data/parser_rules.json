@@ -133,6 +133,30 @@
         ]
     },
     {
+        "name": "PauseBGM",
+        "rule": [
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "ResumeBGM",
+        "rule": [
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
         "name": "ChangeBG",
         "rule": [
             {
@@ -200,6 +224,82 @@
             {
                 "attribute": "waitForAccept",
                 "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "PlayAnim",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "name",
+                "as": "string"
+            },
+            {
+                "attribute": "forced",
+                "as": "bool"
+            },
+            {
+                "attribute": "reversed",
+                "as": "bool"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "StopAnim",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"  
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "PauseAnim",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"  
+            },
+            {
+                "attribute": "id"
+            }
+        ]
+    },
+    {
+        "name": "ResumeAnim",
+        "rule": [
+            {
+                "attribute": "spriteID",
+                "as": "string"
+            },
+            {
+                "attribute": "waitForAccept",
+                "as": "bool"  
             },
             {
                 "attribute": "id"

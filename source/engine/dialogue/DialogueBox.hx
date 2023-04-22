@@ -79,11 +79,15 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		on("GotoFile", onGotoFile);
 		on("ChangeBGM", onChangeBGM);
 		on("StopBGM", onStopBGM);
+		on("PauseBGM", _ -> {FlxG.sound.music?.pause();});
+		on("ResumeBGM", _ -> {FlxG.sound.music?.resume();});
 		on("ChangeBG", onChangeBG);
 		on("AddSprite", onAddSprite);
 		on("RemoveSprite", onRemoveSprite);
 		on("PlayAnim", onPlayAnim);
 		on("StopAnim", onStopAnim);
+		on("PauseAnim", _ -> {activeSprites.get(_["spriteID"]).animation.pause();});
+		on("ResumeAnim", _ -> {activeSprites.get(_["spriteID"]).animation.resume();});
 		on("PlaySound", onPlaySound);
 		on("ApplyEffect", onApplyEffect);
 		on("Set", _ -> {Save.data.variables[_["variable"]] = _["to"];});
@@ -312,9 +316,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onAddSprite(elm:Map<String, Dynamic>) {
 		var file = elm["file"];
-		trace(scene.spritePresets);
-		trace(elm["file"]);
-		trace(scene.spritePresets.exists(elm["file"]));
 
 		if (Assets.exists(file) == false && !scene.spritePresets.exists(file)) {
 			throw "[onAddSprite] Could not find file/preset: " + file;
@@ -339,7 +340,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			sprite.loadGraphic(file);
 		}
 
-		trace(sprite.animation.curAnim.name);
+		// trace(sprite.animation.curAnim.name);
 
 		scene.foregroundSprites.add(sprite);
 
@@ -368,6 +369,10 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onPlayAnim(elm:Map<String, Dynamic>) {
 		var sprite = activeSprites.get(elm["spriteID"]);
+
+		trace("onPLayAnim");
+		trace(elm["spriteID"]);
+		trace(elm["name"],"\n", sprite.animation.exists(elm["name"]));
 
 		if (sprite.animation.exists(elm["name"])) {
 			sprite.animation.play(elm["name"], elm["force"], elm["reversed"]);
@@ -510,7 +515,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			currentData = data[index];
 			if (autoprogressables.contains(currentData.type)) {
 				performActions();
-			} else {trace("NOT AUTOPROGRESABLE", currentData); if (currentData.type=="Talk")index--; break;};
+			} else {trace("NOT AUTOPROGRESABLE", currentData); if (currentData.type=="Talk")index--; performActions();break;};
 		}
 
 		if (currentData.type == "End") {

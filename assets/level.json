@@ -31,7 +31,7 @@
             "image": "assets/images/milk_fanart_2.jpg",
             "anims": [
                 {
-                    "name": "idle",
+                    "name": "anim",
                     "framerate": 4,
                     "frames": [0, 1, 2, 3],
                     "looped": true

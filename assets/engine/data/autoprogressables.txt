@@ -2,6 +2,8 @@ If
 GotoFile
 ChangeBGM
 StopBGM
+PauseBGM
+ResumeBGM
 ChangeBG
 AddSprite
 RemoveSprite
@@ -10,4 +12,6 @@ Set
 Custom
 PlayAnim
 StopAnim
+PauseAnim
+ResumeAnim
 ApplyEffect
