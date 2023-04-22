@@ -1,5 +1,6 @@
 package engine;
 
+import flixel.FlxCamera;
 import flixel.animation.FlxAnimation;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import haxe.Json;
@@ -41,6 +42,8 @@ class Scene extends FlxTransitionableState
 	public var foregroundSprites:FlxTypedGroup<FlxSprite>;
 	public var UI:FlxTypedGroup<FlxSprite>;
 
+	public var UIcam:FlxCamera;
+
 	public var dialogue:Array<Action>;
 	public var dialogueBox:DialogueBox;
 
@@ -69,8 +72,16 @@ class Scene extends FlxTransitionableState
 		foregroundSprites = new FlxTypedGroup<FlxSprite>();
 		UI = new FlxTypedGroup<FlxSprite>();
 
+
+		UIcam = new FlxCamera();
+		UIcam.scroll.set();
+
+		FlxG.cameras.add(UIcam);
+
 		UI.memberAdded.add(function(s) {
 			s.scrollFactor.set();
+			s.cameras = [UIcam];
+			s.camera = s.cameras[0];
 		});
 
 		add(backgroundSprites);

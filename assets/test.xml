@@ -1,6 +1,7 @@
 <Dialogue>
-    <AddSprite file="test" id="m"/>
-    <!-- <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/> -->
+    <AddSprite file="assets/images/milk_fanart_2.jpg" id="m"/>
+    <ApplyEffect spriteID="camera" effect="pixelate"/>
+    <ApplyEffect spriteID="uicamera" effect="pixelate"/>
     <Talk name="mari">Hello, World! Text of Testing. Something Here. Jill</Talk>
         <PauseBGM/>
     <Choices>

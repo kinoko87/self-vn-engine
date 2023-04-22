@@ -1,5 +1,6 @@
 package engine.dialogue;
 
+import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
 import engine.dialogue.DialogueParser.Action;
 import flixel.tweens.FlxTween;
@@ -415,8 +416,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 	}
 
+	public var cameraEffects:Array<String> = [];
+	public var effectBank:Map<String, (FlxSprite, Map<String,Dynamic>) -> Void> = [];
+
 	function onApplyEffect(elm:Map<String, Dynamic>) {
-		if (!activeSprites.exists(elm["spriteID"])) {
+		if (!activeSprites.exists(elm["spriteID"]) && !cameraEffects.contains(elm["effect"])) {
 			throw "Sprite with ID of \"" + elm["spriteID"] + "\" does not exist!";
 		}
 
@@ -435,7 +439,8 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			}
 			FlxTween.tween(sprite, {alpha: fadeTo}, elm["effectDuration"]);
 			default:
-				sprite.shader = null;
+				var fn = effectBank.get(elm["effect"]);
+				fn != null ? fn(sprite, elm) : sprite.shader=null;
 				
 		}
 	}
