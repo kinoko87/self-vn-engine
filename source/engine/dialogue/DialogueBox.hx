@@ -17,6 +17,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.app.Application;
 import openfl.utils.Assets;
+import engine.Controls.Control;
 
 // There are some limitations to making choices a seperate element
 // But I'm too lazy to implement choices as apart of the Talk element
@@ -376,10 +377,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	function onPlayAnim(elm:Map<String, Dynamic>) {
 		var sprite = activeSprites.get(elm["spriteID"]);
 
-		trace("onPLayAnim");
-		trace(elm["spriteID"]);
-		trace(elm["name"],"\n", sprite.animation.exists(elm["name"]));
-
 		if (sprite.animation.exists(elm["name"])) {
 			sprite.animation.play(elm["name"], elm["force"], elm["reversed"]);
 		}
@@ -468,11 +465,10 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	var videoPausesGame:Bool = false;
 
 	function onPlayVideo(elm:Map<String, Dynamic>) {
-		trace("PLAY VIDEO");
 		var v:VideoSprite;
 		v = new VideoSprite(elm["x"], elm["y"]);
 
-		scene.add(v);
+		scene.UI.add(v);
 		activeVideo = v;
 
 		v.playVideo(elm["file"]);
@@ -481,7 +477,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		v.bitmap.finishCallback = () -> {
 			trace("FUCKING FINIHSED");
 			activeVideo.bitmap.stop();
-			scene.remove(activeVideo);
+			scene.UI.remove(activeVideo);
 			activeVideo.destroy();
 			activeVideo=null;
 			videoPausesGame= false;
@@ -515,9 +511,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (!isActive)
 			return;
 
+
+		// trace(FlxG.save.data.binds);
+
 		#if desktop
 		if (videoPausesGame&&activeVideo!=null) {
-			var skip = FlxG.keys.justPressed.ENTER;
+			var skip = FlxG.keys.anyJustPressed(Controls.binds[ACCEPT]);
 			if (skip) {
 				activeVideo.bitmap.stop();
 				scene.remove(activeVideo);
@@ -531,11 +530,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		#end
 
 		super.update(elapsed);
-		
-		var up:Bool = FlxG.keys.justPressed.UP;
-		var down:Bool = FlxG.keys.justPressed.DOWN;
-		var accept:Bool = FlxG.keys.justPressed.ENTER;
-		var speedUp:Bool = FlxG.keys.pressed.SHIFT;
+
+		var up:Bool = FlxG.keys.anyJustPressed(Controls.binds[UP]);
+		var down:Bool = FlxG.keys.anyJustPressed(Controls.binds[DOWN]);
+		var accept:Bool = FlxG.keys.anyJustPressed(Controls.binds[ACCEPT]);
+		var speedUp:Bool = FlxG.keys.anyPressed(Controls.binds[SPEED_UP]);
 
 		if (isSelectingChoice && choiceSprites.length > 0) {
 			if (up) {
@@ -565,7 +564,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			currentData = data[index];
 			if (autoprogressables.contains(currentData.type)) {
 				performActions();
-			} else {trace("NOT AUTOPROGRESABLE", currentData); if (currentData.type=="Talk")index--; performActions();break;};
+			} else {#if debug trace("NOT AUTOPROGRESABLE", currentData.type);#end if (currentData.type=="Talk")index--; performActions();break;};
 		}
 
 		if (currentData.type == "End") {

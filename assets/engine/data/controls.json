@@ -1,30 +1,30 @@
 [
     {
         "control": "UP",
-        "keys": [38]
+        "keys": ["UP"]
     },
     {
         "control": "DOWN",
-        "keys": [40]
+        "keys": ["DOWN"]
     },
     {
         "control": "LEFT",
-        "keys": [37]
+        "keys": ["LEFT"]
     },
     {
         "control": "RIGHT",
-        "keys": [39]
+        "keys": ["RIGHT"]
     },
     {
         "control": "ACCEPT",
-        "keys": [13]
+        "keys": ["ENTER"]
     },
     {
         "control": "SPEED_UP",
-        "keys": [16]
+        "keys": ["SHIFT"]
     },
     {
         "control": "BACK",
-        "keys": [27]
+        "keys": ["ESCAPE"]
     }
 ]

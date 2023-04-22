@@ -1,5 +1,6 @@
 package engine;
 
+import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.animation.FlxAnimation;
 import flixel.group.FlxGroup.FlxTypedGroup;
@@ -67,6 +68,7 @@ class Scene extends FlxTransitionableState
 	public override function create() {
 
 		Save.bind("Save_1");
+		Controls.init();
 
 		backgroundSprites = new FlxTypedGroup<FlxSprite>();
 		foregroundSprites = new FlxTypedGroup<FlxSprite>();
@@ -75,6 +77,7 @@ class Scene extends FlxTransitionableState
 
 		UIcam = new FlxCamera();
 		UIcam.scroll.set();
+		UIcam.bgColor=FlxColor.TRANSPARENT;
 
 		FlxG.cameras.add(UIcam);
 

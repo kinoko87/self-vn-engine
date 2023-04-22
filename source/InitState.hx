@@ -1,5 +1,6 @@
 package;
 
+import engine.Controls;
 import engine.Scene;
 import flixel.FlxG;
 import engine.dialogue.DialogueBox;
@@ -9,10 +10,11 @@ import flixel.FlxState;
 import openfl.Assets;
 
 
-class PlayState extends FlxState
+class InitState extends FlxState
 {
 	override public function create()
 	{
+		Controls.init();
 		FlxG.switchState(new Scene("assets/level.json"));
 		super.create();
 	}

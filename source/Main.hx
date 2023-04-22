@@ -10,6 +10,6 @@ class Main extends Sprite
 	{
 		super();
 		DialogueParser.init();
-		addChild(new FlxGame(0, 0, PlayState));
+		addChild(new FlxGame(0, 0, InitState));
 	}
 }
