@@ -24,9 +24,10 @@ class Controls {
     public static var binds:Map<Control, Array<FlxKey>> = []; 
 
     public static function init() {
-        trace("lex", FlxG.save.data.binds==null);
-        FlxG.save.data.binds=null;
         if (FlxG.save.data.binds == null) {
+            #if debug
+            Debug.log("No binds found in save file " + Save.currentSave + ", setting to default", "controls");
+            #end
             FlxG.save.data.binds = getControlsFile();
             Save.save();
             for (b in 0...FlxG.save.data.binds.length) {
@@ -36,17 +37,14 @@ class Controls {
             return;
         }
 
-        trace("binds from SAVE: ", FlxG.save.data.binds);
-
         if (!binds.exists(UP)) {
+            #if debug
+            Debug.log("Binds haven't been set, setting now", "controls");
+            #end
             for (b in 0...FlxG.save.data.binds.length) {
                 var controlThing = FlxG.save.data.binds[b];
                 binds.set(controlThing.control, [for (i in 0...controlThing.keys.length) FlxKey.fromStringMap.get(controlThing.keys[i])]);
-                
-                trace(binds);
             }
-
-            trace("actual binds Map: ", binds);
         }
     }
 

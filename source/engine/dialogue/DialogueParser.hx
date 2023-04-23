@@ -102,10 +102,13 @@ class DialogueParser
 								action.set(a.attribute, [for (i in element.innerData.split(',')) i.trim()]);
 					}
 				}
-
 				actions.push({type: element.name, elm: action});
 			}
 		}
+
+		#if debug
+		Debug.log("Completed parsing dialogue text.", "dialogue");
+		#end
 
 		return actions;
 	}

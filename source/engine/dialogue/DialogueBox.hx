@@ -111,7 +111,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		while (autoprogressables.contains(currentData.type)) {
 			index++;
 			currentData = data[index];
-			// trace(currentData.type);
 			performActions();
 		}
 	}
@@ -173,6 +172,9 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	function onChoiceAccept() {
 		var curChoice = choices[choiceIndex];
 
+		#if debug
+		Debug.log("Selected choice " + '"${curChoice.text}" (id: ${curChoice.id})', "controls");
+		#end
 
 		if (curChoice.goto != null) {
 			for (i in data) {
@@ -347,7 +349,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			sprite.loadGraphic(file);
 		}
 
-		// trace(sprite.animation.curAnim.name);
 
 		scene.foregroundSprites.add(sprite);
 
@@ -475,7 +476,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		videoPausesGame = elm["pauseGame"];
 
 		v.bitmap.finishCallback = () -> {
-			trace("FUCKING FINIHSED");
 			activeVideo.bitmap.stop();
 			scene.UI.remove(activeVideo);
 			activeVideo.destroy();
@@ -491,9 +491,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (!Assets.exists(file))
 			throw "[onChangeScene] Could not find file: " + file;
 		
-
-			trace("yoko");
-
 			switch (elm["effect"]) {
 				default: // default is fade
 					// Do some transition shit later. idk how FlxTransState works
@@ -511,8 +508,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		if (!isActive)
 			return;
 
-
-		// trace(FlxG.save.data.binds);
 
 		#if desktop
 		if (videoPausesGame&&activeVideo!=null) {
@@ -558,13 +553,12 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 		}
 
 		while (autoprogressables.contains(currentData.type)) {
-			trace('autoprogressable: ', currentData.type);
 			performActions();
 			index++;
 			currentData = data[index];
 			if (autoprogressables.contains(currentData.type)) {
 				performActions();
-			} else {#if debug trace("NOT AUTOPROGRESABLE", currentData.type);#end if (currentData.type=="Talk")index--; performActions();break;};
+			} else {#if debug trace("Not autoprogressable", currentData.type);#end if (currentData.type=="Talk")index--; performActions();break;};
 		}
 
 		if (currentData.type == "End") {
@@ -590,7 +584,6 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			isDone = true;
 
 
-		// trace(currentData.type, index);
 		if (!isDone && !isTalking && !isSelectingChoice && accept) {
 			index++;
 			currentData = data[index];
@@ -600,11 +593,15 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 	}
 
 	public inline function performActions() {
+
+		#if debug
+		Debug.log("Running corresponding callback for " + currentData.type + " action", "dialogue");
+		#end
+
 		if (currentData.type == "Choices"){
 			onChoices(currentData.elm);
 			return;
 		}
-		// trace(currentData.type, actionCallbacks.get(currentData.type));
 		if (actionCallbacks.exists(currentData.type))
 			actionCallbacks.get(currentData.type)(currentData.elm);
 	}
@@ -615,18 +612,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		var next = data[index + 1];
 
-		if (currentData.elm["text"] == "cunt")
-			return;
-
 		if (next != null && autoprogressables.contains(next.type)) {
 			if (next.elm["waitForAccept"] != null && next.elm["waitForAccept"] == true) {
 				return;
 			}
 			currentData= data[++index];
-			// trace("!!!!!!!!!!!!!!!!!!!", currentData);
-			// performActions();
-			// currentData = data[++index];
-			// trace(currentData);
 		}
 
 		if (next != null && next.type == "Choices")

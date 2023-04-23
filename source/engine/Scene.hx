@@ -53,6 +53,10 @@ class Scene extends FlxTransitionableState
 	public function new(sceneFilePath:String)
 	{
 		super();
+		#if debug
+		Debug.log("Initializing scene", "scene");
+		#end
+
 		sceneFile = cast Json.parse(Assets.getText(sceneFilePath));
 		transIn = new TransitionData(sceneFile.transIn.type, sceneFile.transIn.color, sceneFile.transIn.duration);
 		transOut = new TransitionData(sceneFile.transIn.type, sceneFile.transIn.color, sceneFile.transIn.duration);
@@ -77,7 +81,7 @@ class Scene extends FlxTransitionableState
 
 		UIcam = new FlxCamera();
 		UIcam.scroll.set();
-		UIcam.bgColor=FlxColor.TRANSPARENT;
+		UIcam.bgColor= FlxColor.TRANSPARENT;
 
 		FlxG.cameras.add(UIcam);
 
@@ -108,13 +112,18 @@ class Scene extends FlxTransitionableState
 
 		UI.add(dialogueBox);
 
+		#if debug
+		Debug.log("Scene fully loaded.", "scene");
+		#end
+
 		super.create();
 	}
 
 	public override function update(elapsed:Float) {
-		// trace(Save.data.variables["test"]);
+		#if debug
 		if (FlxG.keys.justPressed.R)
 			FlxG.switchState(new Scene("assets/level.json"));
+		#end
 		super.update(elapsed);
 	}
 }
