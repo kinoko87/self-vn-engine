@@ -117,10 +117,13 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function initializeObjects() {
 		box = new FlxSprite(0, 0).makeGraphic(660, Std.int(640 / 4), FlxColor.GRAY);
-		nameText = new FlxText(box.x, box.y - 38, 0, "", 30);
+		nameBox = new FlxSprite(box.x - 20, box.y - 54).makeGraphic(Std.int(box.width/4), 46, FlxColor.GRAY);
+		nameText = new FlxText(nameBox.x+10, nameBox.y + 8, 0, "", 30);
 		dialogueText = new FlxTypeText(box.x + 20, box.y + 20, Std.int(box.width - 20), "");
 
+
 		add(box);
+		add(nameBox);
 		add(nameText);
 		add(dialogueText);
 
@@ -354,7 +357,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 		#if debug
 		if (activeSprites.exists(elm["id"])){
-			trace("[onAddSprite] Sprite with ID " + elm["id"] + " already exists! Overwriting it.");
+			Debug.log("[onAddSprite] Sprite with ID " + elm["id"] + " already exists! Overwriting it.", 'scene');
 		}
 		#end
 		activeSprites.set(elm["id"], sprite);
@@ -389,7 +392,7 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 
 	function onRemoveSprite(elm:Map<String, Dynamic>) {
 		if (activeSprites.get(elm["spriteID"]) == null) {
-			trace("[onRemoveSprite] Sprite with id of \"" + elm["spriteID"] + "\" not found"); 
+			Debug.log("[onRemoveSprite] Sprite with id of \"" + elm["spriteID"] + "\" not found", 'scene'); 
 			return;
 		}
 
@@ -558,7 +561,11 @@ class DialogueBox extends FlxSpriteGroup implements IDialogueBox
 			currentData = data[index];
 			if (autoprogressables.contains(currentData.type)) {
 				performActions();
-			} else {#if debug trace("Not autoprogressable", currentData.type);#end if (currentData.type=="Talk")index--; performActions();break;};
+			} else {
+				if (currentData.type=="Talk") index--;
+				performActions();
+				break;
+			}
 		}
 
 		if (currentData.type == "End") {

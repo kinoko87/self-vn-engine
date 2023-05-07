@@ -14,8 +14,7 @@ class InitState extends FlxState
 {
 	override public function create()
 	{
-		Controls.init();
-		FlxG.switchState(new Scene("assets/level.json"));
+		FlxG.switchState(new Scene("your_scene_here"));
 		super.create();
 	}
 
